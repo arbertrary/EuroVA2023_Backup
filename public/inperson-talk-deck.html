@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<!-- This is the pandoc 2.7.3 template for reveal.js output modified for decker. -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Armin Bernstetter (he/him), Tom Kwasnitschka, and Isabella Peters">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>A Practical Approach to Provenance Capturing for Reproducible Visual Analytics</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="support/vendor/reveal/css/reset.css">
+  <link rel="stylesheet" href="support/vendor/reveal/css/reveal.css">
+  <link rel="stylesheet" href="support/plugins/whiteboard/whiteboard.css">
+  <link rel="stylesheet" href="support/plugins/menu/menu.css">
+  <style>
+        /* This is the global style block for decker's layout css variables (aka css custom properties) 
+        for all kinds of parameterization. Variables are set via an according YAML variable 
+        which defaults from the default.yaml. 
+        Can't be sourced out to external css file since variable substitution is performed
+        by pandoc which does not process the css */
+
+        :root {
+                /* This is the global variable for the default alignment. Defaults to left.    */
+                /* Can be overriden in local YAML and for whole slides or individual elements  */
+                --align-global: left;
+                /* Column spacing, in same awkward unit as reveal's margin which is fraction of 
+                space. Beware, does strange things if set too large. */
+                --margin-columns: calc(0em * 100%);
+                /* Now all the different font sizes */
+                --font-size-base: 28px;
+                --font-size-medium: calc(var(--font-size-base) * 1);
+                --font-size-xx-small: calc(var(--font-size-base) * 0.4);
+                --font-size-x-small: calc(var(--font-size-base) * 0.6);
+                --font-size-small: calc(var(--font-size-base) * 0.8);
+                --font-size-large: calc(var(--font-size-base) * 1.2);
+                --font-size-x-large: calc(var(--font-size-base) * 1.4);
+                --font-size-xx-large: calc(var(--font-size-base) * 1.6);
+                /* This one defines the basic vertical spacing between elements */
+                --spacing-vertical-base: 0.5em;
+                --margin-bottom-elements-base: 0.5em;
+                --margin-bottom-h1: calc(var(--margin-bottom-elements-base) * 1);
+                --margin-bottom-h2: calc(var(--margin-bottom-elements-base) * 0);
+                --margin-bottom-h2-block: calc(var(--margin-bottom-elements-base) * 0.8);
+                --margin-bottom-h3: calc(var(--margin-bottom-elements-base) * 0);
+                --margin-bottom-h3-block: calc(var(--margin-bottom-elements-base) * 0.8);
+                --margin-bottom-p: calc(var(--margin-bottom-elements-base) * 0.8);
+                --margin-bottom-ol: calc(var(--margin-bottom-elements-base) * 0.8);
+                --margin-bottom-ul: calc(var(--margin-bottom-elements-base) * 0.8);
+                --margin-bottom-dl: calc(var(--margin-bottom-elements-base) * 0.8);
+                --margin-bottom-figure: calc(var(--margin-bottom-elements-base) * 0.8);
+                --margin-bottom-img: calc(var(--margin-bottom-elements-base) * 0.8);
+                --margin-bottom-blockquote: calc(var(--margin-bottom-elements-base) * 0.8);
+                --margin-bottom-table: calc(var(--margin-bottom-elements-base) * 1);
+                --margin-bottom-columns: calc(var(--margin-bottom-elements-base) * 0);       
+                --margin-bottom-references: calc(var(--margin-bottom-elements-base) * 0.3);
+                /* The next custom properties for the look of the decoration */
+                --border-decoration-width: 20px;
+                --border-decoration-padding: 10px;
+                --border-decoration-style: solid;  
+                /* whiteboard buttons */
+                --whiteboard-icon-size: 2vmin;
+                --whiteboard-active-color: rgb(42,157,223);
+                --whiteboard-inactive-color: lightgrey;
+                --whiteboard-background-color: rgb(250,250,250);      
+        } 
+  </style>
+   
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <link rel="stylesheet" href="support/plugins/explain/explain.css">
+  <link rel="stylesheet" href="support/vendor/videojs/video-js.min.css">
+      <link rel="stylesheet" href="support/css/decker.css">
+        <link rel="stylesheet" href="css/template.css"/>
+  <script>
+    /* Store JSON encoded Pandoc meta data in a global variable for easy
+    reference from any script. */
+    window.Decker = {meta: {"fragmentInURL":true,"controls":true,"border-decoration-padding":"10px","hideCursorTime":"2000.0","transition":"none","chalkboard":"eurova-deck.json","hash":true,"history":false,"progress":true,"meta-data":["./decker.yaml","./metadata/defaults.yaml"],"border-decoration-width":"20px","center":true,"whiteboard-inactive-color":"lightgrey","whiteboard-icon-size":"2vmin","menu":true,"overview":true,"margin":"5.0e-2","spacing-vertical-base":"0.5em","bibliography":"./references.bib","margin-columns":"0em","test123":"test123","help":true,"provisioning":"Copy","hideInactiveCursor":true,"backgroundTransition":"none","date":"12. June 2023","subtitle":"(at an Ocean Research Institute)","csl":"./chicago-author-date.csl","slideNumber":true,"whiteboard-active-color":"rgb(42,157,223)","rsync-destination":{"path":"/some/path","host":"git@gitlab2.informatik.uni-wuerzburg.de"},"zoom":true,"keyboard":true,"touch":true,"author":"Armin Bernstetter (he/him), Tom Kwasnitschka, and Isabella Peters","title":"A Practical Approach to Provenance Capturing for Reproducible Visual Analytics","template":{"css":"css/template.css","title-page":{"teaser-img":"assets/img/digital-lab-book_notext.png","affiliation-logo":"assets/logos/footer4.png"}},"dictionary":{"de":{"quiz":{"qmi-drop-hint":"...und hier in die richtige Kategorie einsortieren.","solve-button":"Lösung","reset-button":"Zurücksetzen","input-placeholder":"Eingeben und 'Enter'","qmi-drag-hint":"Objekte per Drag&amp;Drop ziehen...","solution":"Lösung"},"exam":{"points":"Punkte","Medium":"Mittelschwer","solve-button":"Lösen","Easy":"Leicht","reset-button":"Zurücksetzen","Hard":"Schwer","again-button":"Nochmal","placeholder":"Antwort eingeben","solution":"Lösung"}},"en":{"quiz":{"qmi-drop-hint":"...and put them here into the correct category.","reset-button":"Reset","solution-button":"Show Solution","input-placeholder":"Type and press 'Enter'","qmi-drag-hint":"Drag items from here...","solution":"Show Solution"},"exam":{"points":"Points","Medium":"Medium","solve-button":"Solve","Easy":"Easy","reset-button":"Reset","Hard":"Hard","again-button":"Again","placeholder":"Type in answer","solution":"Solution"}}},"align-global":"left","vertical-slides":true,"font-size-base":"28px","fragments":true,"static-resource-dirs":["./assets/"],"whiteboard-background-color":"rgb(250,250,250)","border-decoration-style":"solid"}};
+  </script>
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? String.raw`support/vendor/reveal/css/print/pdf.css` : String.raw`support/vendor/reveal/css/print/paper.css`;
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="https://unpkg.com/reveal.js@^4//lib/js/html5shiv.js"></script>
+  <![endif]-->
+
+</head>
+<body data-deckid="">
+  <div class="reveal">
+    <div class="slides">
+
+    <!-- standard settings -->
+               <section id="title-slide" class="title-page">
+              <div class="valign-block">
+            <div class="valigned">
+                <div class="title"> A Practical Approach to Provenance Capturing for Reproducible Visual Analytics</div>
+                                   <div class="subtitle"> (at an Ocean Research Institute) </div>
+                                                   <div class="teaser-img">
+                      <img src=assets/img/digital-lab-book_notext.png>
+                   </div>
+                                                   <div class="date"> 12. June 2023 </div>
+                                                   <div class="author"> <span style="font-weight:bold">Armin Bernstetter (he/him)</span>, Tom Kwasnitschka, and Isabella Peters </div>
+                                                   <div class="affiliation-logo">
+                      <img src=assets/logos/footer4.png>
+                   </div>
+                                 
+            </div>
+        </div>
+         </section>      
+   
+
+
+<section id="section" class="slide level1 align-center" data-menu-title="Slide QR Code">
+<h1 class="align-center" data-menu-title="Slide QR Code"></h1>
+<p>You can also find the slides for this talk at:</p>
+<figure class="decker" alt="talk_QRcode.jpg"><img class="decker" data-src="assets/img/content/talk_QRcode.jpg"><figcaption class="decker">Slides and video: <a href="https://abernstetter.pages.geomar.de/eurova2023">abernstetter.pages.geomar.de/eurova2023</a></figcaption></figure>
+<aside class="notes">
+<h2></h2>
+<p>The slides for this talk are HTML slides so you can also go through them online under this address.</p>
+<p>There’s also a video embedded in which you can see a short example interaction with the tool I am presenting today.</p>
+</aside>
+</section>
+<section id="how-reproducible-are-visual-analytics-workflows" class="slide level1 columns">
+<h1 class="columns">How reproducible are visual analytics workflows?</h1>
+<div class="multi-column-row multi-column-row-3">
+<div class="grow-1 column column-1">
+<div class="box columns left fragment">
+<h2 class="left" id="section-2"></h2>
+<p><br> <br></p>
+<figure class="decker" alt="Picture1.jpg"><img class="decker" data-src="assets/img/Picture1.jpg"><figcaption class="decker">Research question</figcaption></figure>
+</div>
+</div>
+<div class="grow-1 column column-2">
+<div class="box columns center fragment">
+<h2 class="center" id="section-3"></h2>
+<p><br> <br></p>
+<figure class="decker" alt="Picture2.jpg"><img class="decker" data-src="assets/img/Picture2.jpg"><figcaption class="decker">Sensemaking through visual data exploration and analysis</figcaption></figure>
+</div>
+</div>
+<div class="grow-1 column column-3">
+<div class="box columns right fragment">
+<h2 class="right" id="section-4"></h2>
+<figure class="decker" alt="Picture3.jpg"><img class="decker" data-src="assets/img/Picture3.jpg"><figcaption class="decker">Publication of insights and visualization</figcaption></figure>
+<!-- ## There is always space for more Visualization Provenance in visual analytics workflows! {.fragment .bottom style="font-size:large"} -->
+</div>
+</div>
+</div>
+<div class="single-column-row">
+<div class="box columns fragment bottom" style="font-size:100%">
+<h2 class="bottom" style="font-size:100%" id="if-the-insights-and-a-static-image-of-the-visualization-are-being-published-so-should-the-process">If the insights and a static image of the visualization are being published, so should the process!</h2>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</div>
+</div>
+<aside class="notes">
+<h2>How reproducible are visual analytics workflows?</h2>
+<p>Before I go into more specific detail let me raise this question: How reproducible are visual analytics workflows?</p>
+<p>-&gt; Imagine you have some research question and to solve this research question you engage in a sensemaking process using visual analytics.</p>
+<p>-&gt; You emerge with insights and some form of static image of visualized data which you publish.</p>
+<p>But will everyone who reads your publication be able to retrace your steps? Will you yourself be able to remember how you interacted with your visualization software after a year?</p>
+<p>-&gt; We argue that if the insights and a static image of the visualization are being published, so should the process!</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="outline" class="slide level1" data-background-image="assets/img/design/divider.jpg" style="color:white">
+<h1 data-background-image="assets/img/design/divider.jpg" style="color:white">Outline  </h1>
+<div class="box columns">
+<h2 id="a-visual-analytics-in-ocean-research">a) Visual Analytics in Ocean Research</h2>
+</div>
+<div class="box columns" style="color:white">
+<h2 style="color:white" id="b-visualization-provenance">b) Visualization Provenance</h2>
+</div>
+<div class="box columns" style="color:white">
+<h2 style="color:white" id="c-the-digital-lab-book">c) The Digital Lab Book</h2>
+</div>
+<div class="box columns" style="color:white">
+<h2 style="color:white" id="d-conclusion">d) Conclusion</h2>
+</div>
+<aside class="notes">
+<h2>Outline</h2>
+<p>But let’s take a step back.</p>
+<p>We’re first going to talk about some examples of visual analytics in ocean research.</p>
+<p>Then a quick recap on visualization provenance</p>
+<p>Afterwards I am going to give a quick overview of the current state of our tool which we called “The Digital Lab Book”</p>
+<p>And of course I will give a conclusion and a short outlook.</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="section" class="slide level1" data-background-image="in_person/../assets/img/content/scientific_workflow.jpg">
+<h1 data-background-image="in_person/../assets/img/content/scientific_workflow.jpg"> </h1>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</section>
+<section id="field-work-in-geology" class="slide level1 columns">
+<h1 class="columns">Field Work in Geology</h1>
+<div class="multi-column-row multi-column-row-3">
+<div class="grow-1 column column-1">
+<div class="box columns left">
+<h2 class="left" id="geological-compass">Geological compass</h2>
+<figure class="decker" alt="geocompass.jpg"><img class="decker" data-src="in_person/../assets/img/content/geocompass.jpg"><figcaption class="decker">Wikimedia: Setup of a modern geological compass after Prof. Clar (Freiberger) (<a href="https://en.wikipedia.org/wiki/Geological_compass">https://en.wikipedia.org/wiki/Geological_compass</a>)</figcaption></figure>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</div>
+</div>
+<div class="grow-1 column column-3">
+<div class="box columns right">
+<h2 class="right" id="field-notebook">Field Notebook</h2>
+<figure class="decker" alt="fieldnotebook.jpg"><img class="decker" data-src="in_person/../assets/img/content/fieldnotebook.jpg"><figcaption class="decker">UCL Earth Sciences: “An Idiot’s Guide to Fieldwork and Notebooks” by David Dobson (<a href="https://www.ucl.ac.uk/earth-sciences-virtualfieldtrip/fieldskills/fieldsketching">https://www.ucl.ac.uk/earth-sciences-virtualfieldtrip/fieldskills/fieldsketching.html</a>)</figcaption></figure>
+</div>
+</div>
+</div>
+<div class="single-column-row">
+<div class="box columns bottom fragment">
+<h2 class="bottom" id="how-to-do-this-under-water">How to do this under water?</h2>
+</div>
+</div>
+<aside class="notes">
+<h2>Field Work in Geology</h2>
+<p>Let’s start with field work in geology as an example.</p>
+<p>Traditional geologists’ field work consists of going on research field trips to quarries where you can directly interact with your studied objects. You have your geologist’s hammer and your geological compass, you measure for example strike and dip of layers of rock etcs.</p>
+<p>You do this collaboratively with colleagues, you take notes, make drawings, and gather insights in a sensemaking process directly on site.</p>
+<p>-&gt;</p>
+<p>All of this is not possible for marine geologists researching for example deep sea hydrothermal vents f. You can deploy divers, submarines, remotely operated or autonomous underwater vehicles.</p>
+<p>This would be very costly and will still not allow you to directly interact with the environment.</p>
+<p>Therefore even more than on land, ocean researchers need visual analytics.</p>
+<p>I’ll show you a few selected applications and use cases.</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="traditional-visual-analytics-for-geosciences-gis" class="slide level1">
+<h1>Traditional visual analytics for geosciences (GIS)</h1>
+<figure class="decker" alt="qgis_screenshot.jpg"><img class="decker" data-src="in_person/../assets/img/content/qgis_screenshot.jpg"><figcaption class="decker">Example: QGIS (<a href="https://qgis.org">https://qgis.org</a>)</figcaption></figure>
+<aside class="notes">
+<h2>QGIS</h2>
+<p>Maybe you have some experience with Geographic information system software. Q-G-I-S is a powerful open source program which finds a lot of use as multipurpose tool also in ocean research.</p>
+<p>It is desktop based, allows a lot of interaction and is extremely extensible by a large plugin ecosystem.</p>
+<p>In this example you can see part of the southern american continent with bathymetry and topography data including outlines of the exclusive economic zones in black, and earthquake frequency data</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="photogrammetry-datalidar-pointcloud-data" class="slide level1">
+<h1>Photogrammetry Data/Lidar Pointcloud Data</h1>
+<figure class="decker" alt="potree_screenshot.jpg"><img class="decker" data-src="in_person/../assets/img/content/potree_screenshot.jpg"><figcaption class="decker">Example: Potree (<span class="citation" data-cites="schuetz2016potree">Schütz (2016)</span>, <span class="citation" data-cites="schuetz2020outofcore">Schütz, Ohrhallinger, and Wimmer (2020)</span>)</figcaption></figure>
+<aside class="notes">
+<h2>Potree/Lidar Data</h2>
+<p>An important method in ocean research is photogrammetry.</p>
+<p>Seafloor modelling can be done using photogrammetry techniques or 3D laser scanning which allows to build advanced 3D models or pointclouds.</p>
+<p>One example for point cloud viewing and some interaction and measuring capabilities is Potree, an application developed at Technical University Vienna.</p>
+<p>Here you see part of a point cloud of a deep sea hydrothermal vent field in the Niua south volcano between Fiji and Samoa. <!-- -------------------------------------------------------------------------------------------------- --></p>
+</aside>
+</section>
+<section id="immersive-analytics-for-geosciences" class="slide level1">
+<h1>Immersive Analytics for Geosciences</h1>
+<figure class="decker" alt="vrgs_screenshot.jpg"><img class="decker" data-src="in_person/../assets/img/content/vrgs_screenshot.jpg"><figcaption class="decker">Example: VRGS (<a href="https://www.vrgeoscience.com/">https://www.vrgeoscience.com/</a>)</figcaption></figure>
+<aside class="notes">
+<h2>VRGS</h2>
+<p>An approach to immersive analytics for geology is VRGS.</p>
+<p>VRGS is a project implementing exactly the requirements for geologists to do virtual fieldwork.</p>
+<p>Either as desktop application or in virtual reality. <!-- -------------------------------------------------------------------------------------------------- --></p>
+</aside>
+</section>
+<section id="the-arena2" class="slide level1" data-background-image="in_person/../assets/img/2019-10-16_Arena-0191-nikolas-linke_credit.jpg" style="color:white;-webkit-text-stroke: 0.5px lightgray">
+<h1 data-background-image="in_person/../assets/img/2019-10-16_Arena-0191-nikolas-linke_credit.jpg" style="color:white;-webkit-text-stroke: 0.5px lightgray">The ARENA2  </h1>
+<div class="box columns" style="color:white;-webkit-text-stroke: 0.5px lightgray">
+<h2 style="color:white;-webkit-text-stroke: 0.5px lightgray" id="spatially-immersive-visualization-domes-as-a-marine-geoscientific-research-tool-kwasnitschka2023spatially">Spatially Immersive Visualization Domes as a Marine Geoscientific Research Tool <span class="citation" data-cites="kwasnitschka2023spatially">(Kwasnitschka et al. 2023)</span></h2>
+</div>
+<aside class="notes">
+<h2>ARENA2</h2>
+<p>And then, one of our crown jewels at GEOMAR is the ARENA2.</p>
+<p>A spatially immersive visualization dome for collaborative sensemaking through visual analysis inside a spatially immersive environment.</p>
+<p>Its idea is to be a simulator for virtual Geoscience Fieldwork but classic Planetarium Software is also integrated</p>
+<p>as well as for example state of the art Unreal Game Engine Virtual Production Technology</p>
+<p>which can be used to facilitate the power of modern game engine technology for visualization purposes. <!-- -------------------------------------------------------------------------------------------------- --></p>
+</aside>
+</section>
+<section id="section-1" class="slide level1" data-menu-title="Need for more provenance">
+<h1 data-menu-title="Need for more provenance"></h1>
+<div class="box columns">
+<h2 id="no-matter-what-approach-and-application-is-used-the-visual-analysis-processes-need-to-persist-in-some-way-for-better-transparency-and-reproducibility.">No matter what approach and application is used, the visual analysis processes need to persist in some way for better transparency and reproducibility.</h2>
+<p>Also see e.g. <span class="citation" data-cites="ziegler2023needfinding">Ziegler and Chasins (2023)</span>: There is a need for more provenance in GIS system</p>
+</div>
+<aside class="notes">
+<h2></h2>
+<p>Nevertheless, independent of the approach or application, the processes need to persist in some way.</p>
+<p>This allows better transparency, reproducibility, and publication.</p>
+<p>There is a recent study from Ziegler and Chasins, published at CHI 2023 where they discover among other findings, an urgent need for more provenance in GIS systems.</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="section-5" class="slide level1" data-background-image="assets/img/design/divider.jpg" style="color:white" data-menu-title="Outline">
+<h1 data-background-image="assets/img/design/divider.jpg" style="color:white" data-menu-title="Outline"> </h1>
+<div class="box columns" style="color:white">
+<h2 style="color:white" id="a-visual-analytics-in-ocean-research-1">a) Visual Analytics in Ocean Research</h2>
+</div>
+<div class="box columns">
+<h2 id="b-visualization-provenance-1">b) Visualization Provenance</h2>
+</div>
+<div class="box columns" style="color:white">
+<h2 style="color:white" id="c-the-digital-lab-book-1">c) The Digital Lab Book</h2>
+</div>
+<div class="box columns" style="color:white">
+<h2 style="color:white" id="d-conclusion-1">d) Conclusion</h2>
+</div>
+<aside class="notes">
+<h2>Provenance and Reproducibility</h2>
+<p>Therefore let’s dive into a short recap on what provenance is about</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="what-defines-provenance" class="slide level1">
+<h1>What defines Provenance?</h1>
+<div class="box columns example fragment">
+<h2 class="example" id="section"></h2>
+<p>“<em>[…] the sources of information, such as entities and processes, involved in producing or delivering an artifact</em>”</p>
+<p>World Wide Web Consortium (W3C) <span class="citation" data-cites="missier2013family">(Missier, Belhajjame, and Cheney 2013)</span></p>
+</div>
+<div class="box columns example fragment">
+<h2 class="example" id="section-1"></h2>
+<p>“<em>[…] provenance is information about entities, activities, and people involved in producing a piece of data or thing, which can be used to form <strong>assessments about its quality, reliability or trustworthiness</strong></em>”</p>
+<p>W3C <span class="citation" data-cites="2013provoverview">(Groth and Moreau 2013)</span></p>
+</div>
+<aside class="notes">
+<h2>What defines Provenance?</h2>
+<p>-&gt;</p>
+<p>The World Wide Web consortium defines provenance as “the sources of information involved in producing an artifact”</p>
+<p>-&gt;</p>
+<p>and that this information can be used to assess the artifacts “quality, reliability or trustworthiness”</p>
+<p>This mentions the issue of quality assessment. For this, let’s take another quick step back and take a look at how to possibly assess the value of a visualization</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="the-value-of-visualization" class="slide level1">
+<h1>The value of visualization</h1>
+<div class="box columns example">
+<h2 class="example" id="section-2"></h2>
+<p><span class="citation" data-cites="vanwijk2005value">vanWijk (2005)</span>: How to assert and quantify the value of a visualization.</p>
+<p>The value is a trade-off between costs and the gained knowledge.</p>
+<!-- The value is a trade-off between costs (the effort to create it and to understand it) and the gained insights and knowledge. -->
+</div>
+<div class="box columns fragment">
+<h2 id="just-claiming-that-a-visualization-gives-insight-is-not-enough-if-we-want-to-offer-additional-value."><strong>“Just claiming that a visualization gives insight is not enough, if we want to offer additional value.”</strong></h2>
+</div>
+<div class="box columns example fragment">
+<h2 class="example" id="section-3"></h2>
+<p><span style="color:black !important"> <span class="citation" data-cites="dou2010capturing">Dou, Ribarsky, and Chang (2010)</span>: Capture a user’s reasoning process by capturing internal (i.e. in-app interaction) and external (e.g. think-aloud, manual notes) information </span></p>
+</div>
+<div class="box columns fragment">
+<h2 id="these-captured-reasoning-processes-and-the-visualization-state-history-are-what-we-in-this-case-understand-as-provenance">These captured reasoning processes and the visualization state history are what we in this case understand as <strong>Provenance</strong></h2>
+</div>
+<aside class="notes">
+<h2>The value of visualization</h2>
+<p>In 2005, van Wijk proposed a model on how to assert and quantify the value of a visualization.</p>
+<p>The model considers the costs of creating a visualization, and the costs of making sense of it. This is compared to the gained insight and increase in knowledge.</p>
+<p>-&gt; But you need to somehow be able to “prove” that the visualization gives insight.</p>
+<p>This is where provenance information comes into play.</p>
+<p>-&gt; Dou et al. for example extend van wijks model by proposing ways how to capture a user’s reasoning process in visual analysis workflows.</p>
+<p>With this information you then have proof or at least arguments for the value of your visualization.</p>
+<p>-&gt; These reasoning processes together with the state history of the visualization application are what we in this case understand as provenance</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="section-6" class="slide level1" data-background-image="assets/img/design/divider.jpg" style="color:white" data-menu-title="Outline">
+<h1 data-background-image="assets/img/design/divider.jpg" style="color:white" data-menu-title="Outline"> </h1>
+<div class="box columns" style="color:white">
+<h2 style="color:white" id="a-visual-analytics-in-ocean-research-2">a) Visual Analytics in Ocean Research</h2>
+</div>
+<div class="box columns" style="color:white">
+<h2 style="color:white" id="b-visualization-provenance-2">b) Visualization Provenance</h2>
+</div>
+<div class="box columns">
+<h2 id="c-the-digital-lab-book-2">c) The Digital Lab Book</h2>
+</div>
+<div class="box columns" style="color:white">
+<h2 style="color:white" id="d-conclusion-2">d) Conclusion</h2>
+</div>
+<aside class="notes">
+<h2>The Digital Lab Book</h2>
+<p>And for this purpose, we are developing the “Digital Lab Book.” A provenance management tool.</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="the-digital-lab-book" class="slide level1">
+<h1>The “Digital Lab Book”</h1>
+<p>The Digital Lab Book has grown from two critical problems:</p>
+<div class="box columns">
+<h2 id="a-how-to-do-field-work-in-geosciences-when-you-cannot-physically-get-to-the-field">a) How to do <a href="talk-deck.html#/4/0/-1">field work in geosciences</a> when you cannot physically get to the “field”</h2>
+</div>
+<div class="box columns">
+<h2 id="b-the-lack-of-reproducibility-and-transparency-in-geoscience-immersive-visual-analytics-workflows">b) The lack of reproducibility and transparency in geoscience (immersive) visual analytics workflows</h2>
+</div>
+<aside class="notes">
+<h2></h2>
+<p>The two main tasks that form the basis of the Digital Lab Book were how to support field work if you cannot get to the field.</p>
+<p>(Remember the notebook drawing on the geological field work slide.)</p>
+<p>And the lack of provenance in geoscientific visual analysis processes.</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="section-1" class="slide level1 columns" data-menu-title="What DLB is">
+<h1 class="columns" data-menu-title="What DLB is"></h1>
+<div class="multi-column-row multi-column-row-3">
+<div class="grow-1 column column-1">
+<div class="box columns left">
+<h2 class="left" id="what-dlb-is">What DLB is …</h2>
+<ul>
+<li>Third-party tool</li>
+<li>Capturing of visualization states</li>
+<li>Branching and “What-if?” scenarios</li>
+<li>Supports explicit externalization of thought processes</li>
+<li>Export and serialization of visual analysis provenance</li>
+</ul>
+</div>
+</div>
+<div class="grow-1 column column-3">
+<div class="box columns right fragment">
+<h2 class="right" id="and-what-it-is-not.">… and what it is not.</h2>
+<ul>
+<li>An elaborate undo/redo button</li>
+<li>Low-level event-driven interaction tracking (mouse clicks etc.)</li>
+</ul>
+</div>
+</div>
+</div>
+<aside class="notes">
+<h2>What DLB is and what it is not</h2>
+<p>The Digital Lab Book is a tool acting as third party to a given visualization application.</p>
+<p>It captures visualization states at user-defined time steps and enables returning to previous states, branching and therefore the exploration of “What-if?” scenarios in your analysis workflow.</p>
+<p>It supports taking notes and creating mind maps which means explicit externalization of reasoning processes.</p>
+<p>It also allows to export and serialize the gathered artifacts of visual analysis provenance which can then be published.</p>
+<p>-&gt;</p>
+<p>It is, however, not just an elaborate undo/redo button and history management software.</p>
+<p>And it does not track low-level events and interactions such as mouse clicks but rather distinct states.</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="implementation-choices" class="slide level1 columns">
+<h1 class="columns">Implementation Choices</h1>
+<div class="multi-column-row multi-column-row-3">
+<div class="grow-1 column column-1">
+<div class="box columns left">
+<h2 class="left" id="section-2"></h2>
+<p><br> <br></p>
+<ul>
+<li>Web-based application</li>
+<li>Angular frontend and Python Flask backend</li>
+<li>Git as provenance “database”</li>
+</ul>
+</div>
+</div>
+<div class="grow-1 column column-3">
+<div class="box columns right">
+<h2 class="right" id="section-3"></h2>
+<img class="decker" data-src="assets/img/content/dlb/dlb_architecture.jpg" alt="dlb_architecture.jpg">
+</div>
+</div>
+</div>
+<aside class="notes">
+<h2>Implementation Choices</h2>
+<p>We chose to develop the DLB as a web-based application to keep the possibility of potentially offering its functionality as Software as a service.</p>
+<p>The frontend is written in Angular and the backend is a simple Flask architecture.</p>
+<p>For the provenance management and as a “database” we use python bindings to libgit2 since Git versioning offers much that we desired for such a tool.</p>
+<p>And this also allows easy sharing and therefore publication for example by submitting the git repository folder as supplement or by uploading the repository to github or gitlab</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="interaction-with-visualization-applications" class="slide level1">
+<h1>Interaction with Visualization Applications</h1>
+<p>Minimum requirements for a visualization application to be potentially supported:</p>
+<ul>
+<li>API (websocket, REST API) or scriptable/plugin-api</li>
+<li>Save/export current project</li>
+<li>Load/import a project during runtime</li>
+</ul>
+<aside class="notes">
+<h2>Interaction with Visualization Applications</h2>
+<p>Of course the DLB can’t simply connect to any and all visualization applications. The currently supported applications all had to be slightly modified in some way.</p>
+<p>The minimum requirements are a sort of API that allows to save the current state of the application and visualization as a file and load such a file again during runtime to return to the exact state as before.</p>
+<p>In the best case this is a file that can be version controlled and for which a file diff can be calculated</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="currently-supported-applications" class="slide level1">
+<h1>Currently supported applications</h1>
+<dl>
+<dt>Digital Earth Viewer</dt>
+<dd>“Visualisation and exploration of geospatial data in true 3D over time” <span class="citation" data-cites="buck2022visualising">(Buck et al. 2022)</span>
+</dd>
+<dd><a href="https://git.geomar.de/digital-earth/digital-earth-viewer">https://git.geomar.de/digital-earth/digital-earth-viewer</a>
+</dd>
+<dt>Potree</dt>
+<dd>Rendering Large Point Clouds in Web Browsers <span class="citation" data-cites="schuetz2016potree">(Schütz 2016)</span>
+</dd>
+<dd><a href="https://github.com/potree">https://github.com/potree</a>
+</dd>
+<dt>QGIS (WIP)</dt>
+<dd>A Free and Open Source Geographic Information System
+</dd>
+<dt>Unreal Engine</dt>
+<dd>3D computer graphics game engine, creation tool for photoreal visuals, immersive environments, Virtual production
+</dd>
+<dd>Increasingly used in scientific visualization <span class="citation" data-cites="reina2020moving">(Reina et al. 2020)</span>
+</dd>
+</dl>
+<aside class="notes">
+<h2>Currently supported applications</h2>
+<p>Currently, the Digital Lab Book is able to support four different applications.</p>
+<p>The Digital Earth Viewer which is a web-based visualization application developed at Geomar.</p>
+<p>Potree which is a point cloud viewer that you have seen previously.</p>
+<p>QGIS</p>
+<p>and applications built in the Unreal Game Engine.</p>
+<p>-&gt; now let’s take a look at the DLB interface</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="dashboard" class="slide level1">
+<h1>Dashboard</h1>
+<div class="box columns" style="text-align:center">
+<h2 style="text-align:center" id="section-4"></h2>
+<img class="decker" data-src="assets/img/content/dlb/dlb_dashboard_darkmode_full.jpg" alt="dlb_dashboard_darkmode_full.jpg" style="width:720px;">
+</div>
+<aside class="notes">
+<h2>Dashboard</h2>
+<p>The dashboard is the “landing page” and leads a user through a multi-step process (with skippable steps) to setup the repository and connection to the visualizatioon application.</p>
+<p>It also allows to export and import a packaged provenance archive which in simple terms is a git repository containing all visualization states, thumbnails, metadata for the repository</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="history-view" class="slide level1">
+<h1>History View</h1>
+<div class="box columns" style="text-align:center">
+<h2 style="text-align:center" id="section-5"></h2>
+<img class="decker" data-src="assets/img/content/dlb/dlb_historyview_darkmode.jpg" alt="dlb_historyview_darkmode.jpg" style="width:720px;">
+</div>
+<aside class="notes">
+<h2>History View</h2>
+<p>The history view combines a provenance or history graph with a scrollable list view of the latest n states of the currently checked out branch.</p>
+<p>There’s also a replay feature which is able to send back a sequence of states to the visualization application.</p>
+<p>Clicking on a thumbnail of the scene opens a pop-up window of the state with more detailed information.</p>
+<p>You can return to a state, create a branch from that state, add a note, or add the state to the mind map</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="mind-map" class="slide level1">
+<h1>Mind Map</h1>
+<img class="decker" data-src="assets/img/content/dlb/dlb_mindmap_dark.jpg" alt="dlb_mindmap_dark.jpg">
+<aside class="notes">
+<h2>Mind Map</h2>
+<p>The mind map is a currently rather simple implementation for knowledge organization and includes basic features like creating and linking nodes, creating clusters from multiple nodes, color picking etc</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="section-7" class="slide level1" data-background-image="assets/img/design/divider.jpg" style="color:white" data-menu-title="Outline">
+<h1 data-background-image="assets/img/design/divider.jpg" style="color:white" data-menu-title="Outline"> </h1>
+<div class="box columns" style="color:white">
+<h2 style="color:white" id="a-visual-analytics-in-ocean-research-3">a) Visual Analytics in Ocean Research</h2>
+</div>
+<div class="box columns" style="color:white">
+<h2 style="color:white" id="b-visualization-provenance-3">b) Visualization Provenance</h2>
+</div>
+<div class="box columns" style="color:white">
+<h2 style="color:white" id="c-the-digital-lab-book-3">c) The Digital Lab Book</h2>
+</div>
+<div class="box columns">
+<h2 id="d-conclusion-3">d) Conclusion</h2>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</div>
+</section>
+<section id="future-work" class="slide level1">
+<h1>Future Work</h1>
+<div class="box columns">
+<h2 id="development">Development</h2>
+<ul>
+<li>Support immersive workflows (e.g. motion tracking in ARENA2)</li>
+<li>Support more visualization applications</li>
+<li>Polishing (never finished)</li>
+</ul>
+</div>
+<div class="box columns">
+<h2 id="evaluation">Evaluation</h2>
+<ul>
+<li>Qualitative evaluation in selected in-depth use cases with domain scientists</li>
+<li>Quantitative evaluation in user studies with domain scientists and non-specialists (e.g. University students)</li>
+</ul>
+</div>
+<aside class="notes">
+<h2>Future Work</h2>
+<p>There is always something more to do obviously.</p>
+<p>The most important points for the Digital Lab Book now are to support immersive analytics workflows and track provenance artifacts that arise there. We have an optitrack setup in the ARENA2</p>
+<p>Then what’s more important from a research standpoint is the evaluation. We plan to do this by focussing both on a selection of in-depth use cases of domain experts.</p>
+<p>But also with a somewhat larger user study</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="conclusion" class="slide level1">
+<h1>Conclusion</h1>
+<p>The Digital Lab Book is a third-party provenance capturing and management tool with the original goal of supporting visual analysis use cases at our ocean research institute.</p>
+<div class="box columns" style="text-align:center">
+<h2 style="text-align:center" id="section"></h2>
+<figure class="decker" alt="ModifiedReproducibleJourney.jpg" style="width:65%;"><img class="decker" data-src="assets/img/content/ModifiedReproducibleJourney.jpg"><figcaption class="decker">This modified illustration was originally created by Scriberia with The Turing Way community. Used under a CC-BY 4.0 licence. <a href="https://doi.org/10.5281/zenodo.3332807">DOI: 10.5281/zenodo.3332807</a></figcaption></figure>
+</div>
+<aside class="notes">
+<h2>Conclusion</h2>
+<p>To conclude: The Digital Lab Book is a provenance capturing and management tool with the original goal of supporting visual analysis use cases at our ocean research institute.</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="contact" class="slide level1 columns">
+<h1 class="columns">Contact</h1>
+<div class="multi-column-row multi-column-row-3">
+<div class="grow-1 column column-1">
+<div class="box columns left">
+<h2 class="left" id="section-1"></h2>
+<p>Armin Bernstetter</p>
+<ul>
+<li>abernstetter@geomar.de</li>
+<li><a href="https://arbertrary.github.io/">arbertrary.github.io</a></li>
+<li><a href="https://www.linkedin.com/in/abernstetter/">linkedin.com/in/abernstetter/</a></li>
+</ul>
+<img class="decker" data-src="assets/img/arbertrary_qr-code.png" alt="arbertrary_qr-code.png" style="width:250px;">
+<!-- ![](assets/img/Bernstetter_Foto.png) -->
+</div>
+</div>
+<div class="grow-1 column column-3">
+<div class="box columns right">
+<h2 class="right" id="section-2"></h2>
+<img class="decker" data-src="assets/img/Bernstetter_Foto2.jpg" alt="Bernstetter_Foto2.jpg">
+</div>
+</div>
+</div>
+<div class="single-column-row">
+<div class="box columns bottom fragment" style="text-align:center">
+<h2 class="bottom" style="text-align:center" id="thank-you">Thank you!</h2>
+</div>
+</div>
+<aside class="notes">
+<h2>Contact</h2>
+<p>I’d be happy to talk to you about your experience with visual analysis provenance, or Immersive Analytics or if you have any input to this project.</p>
+<p>Thank you!</p>
+<!-- -------------------------------------------------------------------------------------------------- -->
+</aside>
+</section>
+<section id="references" class="slide level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-buck2022visualising" class="csl-entry" role="doc-biblioentry">
+Buck, Valentin, Flemming Stäbler, Jochen Mohrmann, Everardo González, and Jens Greinert. 2022. <span>“Visualising Geospatial Time Series Datasets in Realtime with the Digital Earth Viewer.”</span> <em>Computers &amp; Graphics</em> 103: 121–28. doi:<a href="https://doi.org/10.1016/j.cag.2022.01.010">10.1016/j.cag.2022.01.010</a>.
+</div>
+<div id="ref-dou2010capturing" class="csl-entry" role="doc-biblioentry">
+Dou, Wenwen, William Ribarsky, and Remco Chang. 2010. <span>“Capturing Reasoning Process Through User Interaction.”</span> In <em>EuroVAST 2010: International Symposium on Visual Analytics Science and Technology</em>, edited by Joern Kohlhammer and Daniel Keim. The Eurographics Association. doi:<a href="https://doi.org/10.2312/PE/EuroVAST/EuroVAST10/033-038">10.2312/PE/EuroVAST/EuroVAST10/033-038</a>.
+</div>
+<div id="ref-2013provoverview" class="csl-entry" role="doc-biblioentry">
+Groth, Paul, and Luc Moreau, eds. 2013. <span>“PROV-Overview. An Overview of the PROV Family of Documents.”</span> Project Report. World Wide Web Consortium. <a href="https://eprints.soton.ac.uk/356854/">https://eprints.soton.ac.uk/356854/</a>.
+</div>
+<div id="ref-kwasnitschka2023spatially" class="csl-entry" role="doc-biblioentry">
+Kwasnitschka, Tom, Markus Schlüter, Jens Klimmeck, Armin Bernstetter, Felix Gross, and Isabella Peters. 2023. <span>“<span class="nocase">Spatially Immersive Visualization Domes as a Marine Geoscientific Research Tool</span>.”</span> In <em>Workshop on Visualisation in Environmental Sciences (EnvirVis)</em>, edited by Soumya Dutta, Kathrin Feige, Karsten Rink, and Dirk Zeckzer. The Eurographics Association.
+</div>
+<div id="ref-missier2013family" class="csl-entry" role="doc-biblioentry">
+Missier, Paolo, Khalid Belhajjame, and James Cheney. 2013. <span>“The W3c PROV Family of Specifications for Modelling Provenance Metadata.”</span> In <em>Proceedings of the 16th International Conference on Extending Database Technology</em>, 773–76. EDBT ’13. New York, NY, USA: Association for Computing Machinery. doi:<a href="https://doi.org/10.1145/2452376.2452478">10.1145/2452376.2452478</a>.
+</div>
+<div id="ref-reina2020moving" class="csl-entry" role="doc-biblioentry">
+Reina, Guido, Hank Childs, Krešimir Matković, Katja Bühler, Manuela Waldner, David Pugmire, Barbora Kozlíková, et al. 2020. <span>“The Moving Target of Visualization Software for an Increasingly Complex World.”</span> <em>Computers &amp; Graphics</em> 87: 12–29. doi:<a href="https://doi.org/10.1016/j.cag.2020.01.005">10.1016/j.cag.2020.01.005</a>.
+</div>
+<div id="ref-schuetz2016potree" class="csl-entry" role="doc-biblioentry">
+Schütz, Markus. 2016. <span>“Potree: Rendering Large Point Clouds in Web Browsers.”</span> Master’s thesis, Favoritenstrasse 9-11/E193-02, A-1040 Vienna, Austria: Institute of Computer Graphics; Algorithms, Vienna University of Technology. <a href="https://www.cg.tuwien.ac.at/research/publications/2016/SCHUETZ-2016-POT/">https://www.cg.tuwien.ac.at/research/publications/2016/SCHUETZ-2016-POT/</a>.
+</div>
+<div id="ref-schuetz2020outofcore" class="csl-entry" role="doc-biblioentry">
+Schütz, Markus, Stefan Ohrhallinger, and Michael Wimmer. 2020. <span>“Fast Out-of-Core Octree Generation for Massive Point Clouds.”</span> <em>Computer Graphics Forum</em> 39 (7): 1–13. doi:<a href="https://doi.org/10.1111/cgf.14134">10.1111/cgf.14134</a>.
+</div>
+<div id="ref-vanwijk2005value" class="csl-entry" role="doc-biblioentry">
+vanWijk, Jarke J. 2005. <span>“The Value of Visualization.”</span> In <em>IEEE Visualization</em>, 79–86. IEEE Computer Society. doi:<a href="https://doi.org/10.1109/VISUAL.2005.1532781">10.1109/VISUAL.2005.1532781</a>.
+</div>
+<div id="ref-ziegler2023needfinding" class="csl-entry" role="doc-biblioentry">
+Ziegler, Parker, and Sarah E. Chasins. 2023. <span>“A Need-Finding Study with Users of Geospatial Data.”</span> In <em>Proceedings of the 2023 <span>CHI</span> Conference on Human Factors in Computing Systems</em>. <span>ACM</span>. doi:<a href="https://doi.org/10.1145/3544548.3581370">10.1145/3544548.3581370</a>.
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="support/vendor/reveal/js/reveal.js"></script>
+  <script src="support/vendor/js/jquery.min.js"></script>
+  <script src="support/vendor/videojs/video.min.js"></script>
+  <script src="support/js/decker.js"></script>
+  <script src="support/js/sage.js"></script>
+  
+  <script>
+      // this has to be done before reveal highlight plugin is initialized
+      prepareCodeHighlighting();
+      prepareSAGE();
+  </script>
+
+
+  <link rel="stylesheet" href="support/examiner/examiner.css">
+  <script type="module">
+    import {prepareExaminer} from "./support/examiner/examiner.js";
+    prepareExaminer();
+  </script>
+
+
+
+
+
+  <script>
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        pdfMaxPagesPerSlide: 10,
+        pdfSeparateFragments: false,
+        // Display controls in the bottom right corner
+        controls: Decker.meta.controls,
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'true',
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: true,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Loop the presentation
+        // Change the presentation direction to be RTL
+	// Randomizes the order of slides each time the presentation loads
+        // Turns fragments on and off globally
+        fragments: true,
+        fragmentInURL: true,
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Flags if speaker notes should be visible to all viewers
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        // Stop auto-sliding after user input
+          // Hide cursor if inactive
+          hideInactiveCursor: true,
+          // Time before the cursor is hidden (in ms)
+          hideCursorTime: 2000.0,
+        // Transition style
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        // Factor of the display size that should remain empty around the content
+        margin: 5.0e-2,
+        // whether to mark y-overflowing slides by a red border
+        checkOverflow: false,
+
+
+        // whether to use vertical slides (in decker.js)
+         verticalSlides: true,
+
+
+        // setup reveal-menu
+        menu: {
+          side: 'left',
+          width: 'wide',
+          numbers: false,
+          titleSelector: 'h1',
+          useTextContentForMissingTitles: false,
+          hideMissingTitles: false,
+          markers: true,
+          custom: false,  
+          themes: false,
+          transitions: false,
+          openButton: true,
+          openSlideNumber: true,
+          keyboard: true,
+          sticky: false,
+          autoOpen: true,
+          delayInit: false,
+          openOnInit: false,
+          loadIcons: false
+	    },
+
+        // mathjax
+        math: {
+          mathjax: String.raw`support/vendor/mathjax/`,
+          macros: {
+              R:         "{{\\mathrm{{I}\\kern-.15em{R}}}}",
+              laplace:   "{\\Delta}",
+              grad:      "{\\nabla}",
+              T:         "^{\\mathsf{T}}",
+              abs:       ['\\left\\lvert #1 \\right\\rvert', 1],
+              det:       ['\\left\\lvert #1 \\right\\rvert', 1],
+              norm:      ['\\left\\Vert #1 \\right\\Vert', 1],
+              iprod:     ['\\left\\langle #1 \\right\\rangle', 1],
+              vec:       ['{\\mathbf{\\boldsymbol{#1}}}', 1],
+              mat:       ['{\\mathbf{\\boldsymbol{#1}}}', 1],
+              set:       ['\\mathcal{#1}', 1],
+              func:      ['\\mathrm{#1}', 1],
+              trans:     ['{#1}\\mkern-1mu^{\\mathsf{T}}', 1],
+              matrix:    ['\\begin{bmatrix} #1 \\end{bmatrix}', 1],
+              vector:    ['\\begin{pmatrix} #1 \\end{pmatrix}', 1],
+              of:        ['\\left( #1 \\right\)', 1],
+              diff:      ['\\frac{\\mathrm{d}{#1}}{\\mathrm{d}{#2}}', 2],
+              pdiff:     ['\\frac{\\partial {#1}}{\\partial {#2}}', 2],
+              vc:        ['{\\mathbf{\\boldsymbol{#1}}}', 1],
+              qt:        ['\\hat{\\vc {#1}}', 1],
+              mt:        ['{\\mathbf{\\boldsymbol{#1}}}', 1],
+              pt:        ['\\boldsymbol{#1}', 1],
+              textcolor: ['\\color{#1}', 1]
+          }
+        },
+
+          // setup charts
+          chart: {
+              defaults: {
+                  global: {
+                      tooltips: {
+                          mode: 'point',
+                          intersect: true,
+                      },
+                      legend: { position: "bottom" },
+                      plugins: { colorschemes: { scheme: "tableau.Classic10" } }
+                  },
+              },
+              bar:   { borderWidth: "1" },
+              line:  { borderWidth: "2", tension: "0" },
+              radar: { borderWidth: "2" }
+          },
+
+
+
+       
+
+        
+          // plugins
+          dependencies: [
+              { src: String.raw`support/plugins/charts/Chart.js`},
+              { src: String.raw`support/plugins/charts/plugin-errorbars.js`},
+              { src: String.raw`support/plugins/charts/plugin-colorschemes.js`},
+              { src: String.raw`support/plugins/charts/plugin-csszoom.js`},
+              { src: String.raw`support/plugins/charts/csv2chart.js`},
+              { src: String.raw`support/plugins/math/math.js` },
+              { src: String.raw`support/plugins/whiteboard/whiteboard.js`},
+              { src: String.raw`support/plugins/zoom/zoom.js` },
+              { src: String.raw`support/plugins/print/print.js` },
+              { src: String.raw`support/plugins/search/search.js`, async: true },
+              { src: String.raw`support/plugins/quiz-wue/quiz-wue.js` },
+ 
+    
+              { src: String.raw`support/plugins/menu/menu.js`, async: true },
+              { src: String.raw`support/plugins/explain/explain.js` },
+              { src: String.raw`support/vendor/reveal/plugin/notes/notes.js`, async: true }
+          ]
+      });
+  </script>
+
+    </body>
+</html>

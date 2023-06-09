@@ -1,0 +1,139 @@
+/*
+ * GLOBAL VARIABLES
+ */
+
+:root {
+	/* --color1: #005aa0; */
+	--color1: #00589C;
+	--color2: #5EC5ED;
+	/* --color2: #95c230; */
+}
+
+/*
+ * GLOBAL HEADER IMG
+ */
+
+body {
+	/* background-image: url("/assets/logos/header.png");          */
+	background-image: url("../assets/logos/header.png");
+	background-size: 25%;
+	/* background-image: url("/_assets/logos/geomar/geomar_logo_kurz.png");
+	background-size: 15%; */
+	background-repeat: no-repeat;
+	background-position-x: right;
+	/* background-color: #DAEDF5; */
+}
+
+figcaption {
+	font-size: medium;
+}
+
+/* 
+ * TITLE PAGE SETTINGS
+ */
+.reveal .title-page .title {
+	color: var(--color1);
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.reveal .title-page .subtitle {
+	color: var(--color2);
+	font-weight: bold;
+	font-size: x-large;
+	/* text-decoration: overline; */
+}
+
+.reveal .title-page .affiliation-logo img {
+	height: 50px;
+}
+
+.reveal .title-page .date {
+	color: var(--color1);
+}
+
+.reveal .title-page .author {
+	color: var(--color1);
+	text-decoration: overline;
+}
+
+div .affiliation-logo {
+	margin-top: 20px;
+}
+
+/*
+ * OTHER GLOBAL DEFINITIONS
+ */
+
+.reveal .controls .navigate-right .controls-arrow {
+	color: var(--color1);
+}
+
+.reveal h1 {
+	font-weight: bold;
+	font-size: 30pt;
+	color: var(--color1);
+}
+
+.reveal h2 {
+	font-size: 18pt;
+	color: var(--color2);
+}
+
+.reveal .slides section {
+	font-size: 20px;
+}
+
+.reveal div.box.columns.example {
+	border-color: var(--color1);
+	border-width: 0.5rem;
+}
+
+.reveal .progress {
+	height: 10px;
+}
+
+.reveal .progress span {
+	background: var(--color1);
+}
+
+.reveal .slide-number {
+	font-size: large;
+}
+
+/*
+ * REFERENCE/BIBLIOGRAPHY
+ */
+
+.reveal .references {
+	/* overflow: hidden; */
+	margin-left: var(--border-decoration-width);
+	padding-left: var(--border-decoration-padding);
+	margin-right: var(--border-decoration-width);
+	padding-right: var(--border-decoration-padding);
+}
+
+.reveal .references div {
+	font-size: small;
+	/* line-height: 2; */
+}
+
+.reveal .references div::before {
+	content: "•";
+}
+
+.reveal .references div span {
+	font-weight: bold;
+}
+
+/*
+ * OTHER
+ */
+
+.reveal .slides section .fragment.visible {
+	color: lightgray;
+}
+
+.reveal .slides section .fragment.visible.current-fragment {
+	color: black;
+}
